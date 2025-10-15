@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Download & Browse JSON</title>
+  <style>
+    :root{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{max-width:900px;margin:40px auto;padding:20px;line-height:1.5;color:#111}
+    h1{font-size:20px;margin-bottom:8px}
+    .controls{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+    button.primary{background:#0366d6;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#f3f4f6;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+    select{padding:10px;border-radius:8px;border:1px solid #ddd;min-width:240px}
+    .card{background:#fff;border:1px solid #eee;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+    .fields{margin-top:14px;display:grid;gap:10px}
+    .field-row{display:flex;align-items:center;gap:8px}
+    .label{min-width:140px;font-weight:600;color:#333}
+    .value{flex:1;padding:8px 12px;border-radius:8px;border:1px solid #eee;background:#fafafa;font-family:monospace}
+    .copy-btn{background:transparent;border:0;padding:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+    .copy-btn svg{width:18px;height:18px;opacity:0.85}
+    .status{margin-top:12px;font-size:14px;color:#444}
+    .hint{margin-top:10px;color:#666;font-size:13px}
+    .small{font-size:13px;color:#666}
+    footer{margin-top:26px;color:#666;font-size:13px}
+  </style>
+</head>
+<body>
+  <h1>JSON downloader & viewer</h1>
+  <div class="controls">
+    <button id="downloadBtn" class="primary">Download latest</button>
+    <select id="nameSelect">
+      <option value="">-- Select name --</option>
+    </select>
+    <button id="refreshBtn" class="secondary">Refresh dropdown</button>
+  </div>
+
+  <div class="card">
+    <div class="small">Selected point details</div>
+    <div id="fieldsArea" class="fields"></div>
+    <div id="copiedStatus" class="status">Copied: <strong id="copiedText">None</strong></div>
+  </div>
+
+  <div class="hint">Tip: Replace <code>JSON_URL</code> in the script with your actual public JSON file URL.</div>
+
+  <footer>Supports JSON that is either an array of points or an object with a <code>days</code> array.</footer>
+
+  <script>
+    const JSON_URL = 'weather_locations.json'; // Replace this
+    let latestData = null;
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const selectEl = document.getElementById('nameSelect');
+    const fieldsArea = document.getElementById('fieldsArea');
+    const copiedTextEl = document.getElementById('copiedText');
+
+    function formatNum(n){
+      return typeof n === 'number' ? n.toFixed(10) : (isNaN(Number(n)) ? n : Number(n).toFixed(10));
+    }
+
+    async function fetchJson(url){
+      const res = await fetch(url, {cache:'no-store'});
+      if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+      return await res.json();
+    }
+
+    async function handleDownload(){
+      try{
+        downloadBtn.disabled = true;
+        downloadBtn.textContent = 'Downloading...';
+        const data = await fetchJson(JSON_URL);
+
+        // Automatically replace old JSON data with the new one (no file download)
+        latestData = extractPoints(data);
+        loadIntoDropdown(latestData);
+        alert('Latest JSON successfully downloaded and loaded.');
+      }catch(err){
+        alert('Error: ' + err.message);
+        console.error(err);
+      }finally{
+        downloadBtn.disabled = false;
+        downloadBtn.textContent = 'Download latest';
+      }
+    }
+
+    function extractPoints(data){
+      if (!data) return [];
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data.days)) return data.days;
+      for (const k of ['points','items','data']) if (Array.isArray(data[k])) return data[k];
+      const numericKeys = Object.keys(data).filter(x => !isNaN(Number(x))).sort((a,b)=>a-b);
+      if (numericKeys.length) return numericKeys.map(k=>data[k]);
+      return [];
+    }
+
+    function loadIntoDropdown(points){
+      selectEl.innerHTML = '<option value="">-- Select name --</option>';
+      if (!points.length){
+        const opt = document.createElement('option');
+        opt.textContent = 'No points found';
+        selectEl.appendChild(opt);
+        return;
+      }
+      points.forEach((p,i)=>{
+        const opt=document.createElement('option');
+        opt.value=i;
+        opt.textContent=p.name||('point_'+i);
+        selectEl.appendChild(opt);
+      });
+    }
+
+    function clearFields(){fieldsArea.innerHTML='';}
+
+    function makeCopyButton(){
+      const btn=document.createElement('button');
+      btn.type='button';btn.className='copy-btn';btn.title='Copy value';
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21H8a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="3" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      return btn;
+    }
+
+    function showFieldsForIndex(i){
+      clearFields();
+      const p = latestData[i];
+      if (!p) return;
+
+      const ordered=['name','lat','lon','altitude','height anamoly'];
+      const used=new Set();
+
+      function addRow(label,value){
+        const row=document.createElement('div');row.className='field-row';
+        const lab=document.createElement('div');lab.className='label';lab.textContent=label;
+        const val=document.createElement('div');val.className='value';val.textContent=value;
+        const copyBtn=makeCopyButton();
+        copyBtn.addEventListener('click',async()=>{
+          await navigator.clipboard.writeText(String(value));
+          copiedTextEl.textContent=`${p.name||'unknown'} : ${label}`;
+        });
+        row.append(lab,val,copyBtn);
+        fieldsArea.appendChild(row);
+      }
+
+      for (const k of ordered){
+        for (const pk in p){
+          if (used.has(pk)) continue;
+          if (pk.toLowerCase()===k.toLowerCase()){
+            used.add(pk);
+            addRow(pk,formatNum(p[pk]));
+          }
+        }
+      }
+      for (const pk in p){
+        if (!used.has(pk)) addRow(pk,formatNum(p[pk]));
+      }
+    }
+
+    downloadBtn.addEventListener('click', handleDownload);
+    refreshBtn.addEventListener('click', async ()=>{
+      try{
+        refreshBtn.disabled=true;refreshBtn.textContent='Refreshing...';
+        const data=await fetchJson(JSON_URL);
+        latestData=extractPoints(data);
+        loadIntoDropdown(latestData);
+      }catch(err){alert('Error: '+err.message);}finally{refreshBtn.disabled=false;refreshBtn.textContent='Refresh dropdown';}
+    });
+
+    selectEl.addEventListener('change', e=>{
+      if (e.target.value===''){clearFields();return;}
+      showFieldsForIndex(Number(e.target.value));
+    });
+
+    (async()=>{
+      try{
+        const data=await fetchJson(JSON_URL);
+        latestData=extractPoints(data);
+        loadIntoDropdown(latestData);
+      }catch(e){console.warn('Prefetch failed');}
+    })();
+  </script>
+</body>
+</html>
