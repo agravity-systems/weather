@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Download & Browse JSON</title>
+  <title>Weather Locations - Agravity</title>
   <style>
     :root{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
     body{max-width:900px;margin:40px auto;padding:20px;line-height:1.5;color:#111}
@@ -26,7 +26,7 @@
   </style>
 </head>
 <body>
-  <h1>JSON downloader & viewer</h1>
+  <h1>Agravity - Weather Locations</h1>
   <div class="controls">
     <button id="downloadBtn" class="primary">Download latest</button>
     <select id="nameSelect">
@@ -41,9 +41,7 @@
     <div id="copiedStatus" class="status">Copied: <strong id="copiedText">None</strong></div>
   </div>
 
-  <div class="hint">Tip: Replace <code>JSON_URL</code> in the script with your actual public JSON file URL.</div>
 
-  <footer>Supports JSON that is either an array of points or an object with a <code>days</code> array.</footer>
 
   <script>
     const JSON_URL = 'weather_locations.json'; // Replace this
