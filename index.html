@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Weather Locations - Agravity</title>
+  <title>Agravity - Weather Locations</title>
   <style>
     :root{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
     body{max-width:900px;margin:40px auto;padding:20px;line-height:1.5;color:#111}
@@ -22,6 +22,8 @@
     .status{margin-top:12px;font-size:14px;color:#444}
     .hint{margin-top:10px;color:#666;font-size:13px}
     .small{font-size:13px;color:#666}
+    .maps-list{margin:6px 0 0 0;padding-left:20px}
+    .maps-list li{margin:4px 0}
     footer{margin-top:26px;color:#666;font-size:13px}
   </style>
 </head>
@@ -38,52 +40,50 @@
   <div class="card">
     <div class="small">Selected point details</div>
     <div id="fieldsArea" class="fields"></div>
+    <div id="mapsArea" style="margin-top:8px"></div>
     <div id="copiedStatus" class="status">Copied: <strong id="copiedText">None</strong></div>
   </div>
 
 
-
   <script>
-    const JSON_URL = 'weather_locations.json'; // Replace this
+    // CONFIG: set your public JSON URL here
+    const JSON_URL = 'weather_locations.json'; // replace
+
     let latestData = null;
 
     const downloadBtn = document.getElementById('downloadBtn');
     const refreshBtn = document.getElementById('refreshBtn');
     const selectEl = document.getElementById('nameSelect');
     const fieldsArea = document.getElementById('fieldsArea');
+    const mapsArea = document.getElementById('mapsArea');
     const copiedTextEl = document.getElementById('copiedText');
 
     function formatNum(n){
       return typeof n === 'number' ? n.toFixed(10) : (isNaN(Number(n)) ? n : Number(n).toFixed(10));
     }
 
+    // aggressive fetch with cache-busting and helpful logs
     async function fetchJson(url){
-  // append cache-buster so the browser/CDN always fetches latest
-  const sep = url.includes('?') ? '&' : '?';
-  const fetchUrl = `${url}${sep}_=${Date.now()}`;
+      const sep = url.includes('?') ? '&' : '?';
+      const fetchUrl = `${url}${sep}_=${Date.now()}`;
+      console.info('[fetchJson] requesting:', fetchUrl);
 
-  const res = await fetch(fetchUrl, { cache: 'no-store', mode: 'cors' });
-  if (!res.ok) throw new Error('Fetch failed: ' + res.status);
-  return await res.json();
-}
+      const res = await fetch(fetchUrl, {
+        method: 'GET', mode: 'cors', cache: 'no-store', credentials: 'omit',
+        headers: {
+          'Pragma': 'no-cache', 'Cache-Control': 'no-cache, no-store, must-revalidate'
+        }
+      });
 
-    async function handleDownload(){
-      try{
-        downloadBtn.disabled = true;
-        downloadBtn.textContent = 'Downloading...';
-        const data = await fetchJson(JSON_URL);
+      console.info('[fetchJson] status:', res.status);
+      const hdrs = ['cache-control','etag','last-modified','age','cf-cache-status','x-cache','via','server'];
+      hdrs.forEach(h => { const v = res.headers.get(h); if (v) console.info(`[fetchJson] header ${h}:`, v); });
 
-        // Automatically replace old JSON data with the new one (no file download)
-        latestData = extractPoints(data);
-        loadIntoDropdown(latestData);
-        alert('Latest Weather Locations successfully downloaded and loaded.');
-      }catch(err){
-        alert('Error: ' + err.message);
-        console.error(err);
-      }finally{
-        downloadBtn.disabled = false;
-        downloadBtn.textContent = 'Download latest';
-      }
+      if (!res.ok) throw new Error('Fetch failed: ' + res.status + ' ' + res.statusText);
+
+      const data = await res.json();
+      try { localStorage.setItem('latestJsonData', JSON.stringify(data)); } catch(e) { console.warn('localStorage failed', e); }
+      return data;
     }
 
     function extractPoints(data){
@@ -97,86 +97,103 @@
     }
 
     function loadIntoDropdown(points){
+      latestData = points;
       selectEl.innerHTML = '<option value="">-- Select name --</option>';
-      if (!points.length){
-        const opt = document.createElement('option');
-        opt.textContent = 'No points found';
-        selectEl.appendChild(opt);
-        return;
+      if (!points || points.length === 0){
+        const opt = document.createElement('option'); opt.textContent = 'No points found'; selectEl.appendChild(opt); return;
       }
       points.forEach((p,i)=>{
-        const opt=document.createElement('option');
-        opt.value=i;
-        opt.textContent=p.name||('point_'+i);
-        selectEl.appendChild(opt);
+        const opt=document.createElement('option'); opt.value=i; opt.textContent=p.name||('point_'+i); selectEl.appendChild(opt);
       });
     }
 
-    function clearFields(){fieldsArea.innerHTML='';}
+    function clearFields(){ fieldsArea.innerHTML = ''; mapsArea.innerHTML = ''; }
 
     function makeCopyButton(){
-      const btn=document.createElement('button');
-      btn.type='button';btn.className='copy-btn';btn.title='Copy value';
-      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21H8a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="3" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const btn=document.createElement('button'); btn.type='button'; btn.className='copy-btn'; btn.title='Copy value';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21H8a2 2 0 0 1-2-2V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="3" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       return btn;
     }
 
     function showFieldsForIndex(i){
       clearFields();
+      if (!latestData || !latestData[i]) return;
       const p = latestData[i];
-      if (!p) return;
 
-      const ordered=['name','lat','lon','altitude','height anamoly'];
-      const used=new Set();
+      const ordered = ['name','lat','lon','altitude','height anamoly','height_anomaly','heightAnomaly','height_anom','height'];
+      const used = new Set();
 
-      function addRow(label,value){
-        const row=document.createElement('div');row.className='field-row';
-        const lab=document.createElement('div');lab.className='label';lab.textContent=label;
-        const val=document.createElement('div');val.className='value';val.textContent=value;
-        const copyBtn=makeCopyButton();
-        copyBtn.addEventListener('click',async()=>{
-          await navigator.clipboard.writeText(String(value));
-          copiedTextEl.textContent=`${p.name||'unknown'} : ${label}`;
-        });
-        row.append(lab,val,copyBtn);
+      function addRow(label, rawValue, allowCopy=true){
+        const row = document.createElement('div'); row.className='field-row';
+        const lab = document.createElement('div'); lab.className='label'; lab.textContent = label;
+        const val = document.createElement('div'); val.className='value'; val.textContent = rawValue;
+        row.appendChild(lab); row.appendChild(val);
+        if (allowCopy){ const copyBtn = makeCopyButton(); copyBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(String(rawValue)); copiedTextEl.textContent = `${p.name ?? 'unknown'} : ${label}`; }catch(e){ alert('Copy failed: ' + (e && e.message)); } }); row.appendChild(copyBtn); }
         fieldsArea.appendChild(row);
       }
 
+      // preferred keys first
       for (const k of ordered){
-        for (const pk in p){
+        for (const pk of Object.keys(p)){
           if (used.has(pk)) continue;
-          if (pk.toLowerCase()===k.toLowerCase()){
+          if (pk.toLowerCase() === k.toLowerCase()){
             used.add(pk);
-            addRow(pk,formatNum(p[pk]));
+            const raw = (typeof p[pk] === 'number') ? formatNum(p[pk]) : p[pk];
+            // name should not have copy button
+            const allowCopy = pk.toLowerCase() !== 'name';
+            addRow(pk, raw, allowCopy);
           }
         }
       }
-      for (const pk in p){
-        if (!used.has(pk)) addRow(pk,formatNum(p[pk]));
+      // remaining keys
+      for (const pk of Object.keys(p)){
+        if (used.has(pk)) continue; used.add(pk);
+        const raw = (typeof p[pk] === 'number') ? formatNum(p[pk]) : p[pk];
+        // don't add copy for 'name' or for 'maps' here
+        if (pk.toLowerCase() === 'maps') continue;
+        const allowCopy = pk.toLowerCase() !== 'name';
+        addRow(pk, raw, allowCopy);
+      }
+
+      // now handle maps array specially (display as bullets, no copy buttons)
+      const mapsKey = Object.keys(p).find(k => k.toLowerCase() === 'maps');
+      if (mapsKey){
+        const mapsVal = p[mapsKey];
+        const containerLabel = document.createElement('div'); containerLabel.className='label'; containerLabel.textContent='maps';
+        const ul = document.createElement('ul'); ul.className = 'maps-list';
+        if (Array.isArray(mapsVal)){
+          mapsVal.forEach(item => {
+            const li = document.createElement('li'); li.textContent = String(item); ul.appendChild(li);
+          });
+        } else if (typeof mapsVal === 'string'){
+          const li = document.createElement('li'); li.textContent = mapsVal; ul.appendChild(li);
+        }
+        mapsArea.appendChild(containerLabel);
+        mapsArea.appendChild(ul);
       }
     }
 
-    downloadBtn.addEventListener('click', handleDownload);
+    // event listeners
+    downloadBtn.addEventListener('click', async ()=>{
+      try{ downloadBtn.disabled=true; downloadBtn.textContent='Downloading...'; const data = await fetchJson(JSON_URL); const points = extractPoints(data); loadIntoDropdown(points); alert('Latest JSON downloaded and loaded.'); }catch(err){ alert('Error: ' + err.message); console.error(err); }finally{ downloadBtn.disabled=false; downloadBtn.textContent='Download latest'; }
+    });
+
     refreshBtn.addEventListener('click', async ()=>{
-      try{
-        refreshBtn.disabled=true;refreshBtn.textContent='Refreshing...';
-        const data=await fetchJson(JSON_URL);
-        latestData=extractPoints(data);
-        loadIntoDropdown(latestData);
-      }catch(err){alert('Error: '+err.message);}finally{refreshBtn.disabled=false;refreshBtn.textContent='Refresh dropdown';}
+      try{ refreshBtn.disabled=true; refreshBtn.textContent='Refreshing...'; const data = await fetchJson(JSON_URL); loadIntoDropdown(extractPoints(data)); }catch(err){ alert('Error: ' + err.message); console.error(err);}finally{ refreshBtn.disabled=false; refreshBtn.textContent='Refresh dropdown'; }
     });
 
-    selectEl.addEventListener('change', e=>{
-      if (e.target.value===''){clearFields();return;}
-      showFieldsForIndex(Number(e.target.value));
-    });
+    selectEl.addEventListener('change', (ev)=>{ const val = ev.target.value; if (val === ''){ clearFields(); return; } showFieldsForIndex(Number(val)); });
 
-    (async()=>{
+    // load cached data if present, then try to prefetch fresh
+    (function init(){
       try{
-        const data=await fetchJson(JSON_URL);
-        latestData=extractPoints(data);
-        loadIntoDropdown(latestData);
-      }catch(e){console.warn('Prefetch failed');}
+        const cached = localStorage.getItem('latestJsonData');
+        if (cached){ const parsed = JSON.parse(cached); const pts = extractPoints(parsed); loadIntoDropdown(pts); }
+      }catch(e){ console.warn('cached load failed', e); }
+
+      (async ()=>{
+        try{ const data = await fetchJson(JSON_URL); loadIntoDropdown(extractPoints(data)); }catch(e){ console.warn('Prefetch failed', e); }
+      })();
     })();
   </script>
 </body>
