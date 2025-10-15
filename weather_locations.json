@@ -1,20 +1,27 @@
 [
   {
-    "name": "Point_Alpha",
+    "name": "Point_A",
     "lat": 26.9123456789,
     "lon": 88.7245678910,
     "altitude": 105.2345678901,
-    "height anamoly": 2.4567890123
+    "height anamoly": 2.4567890123,
+    "maps":
+    [
+      "map1",
+      "map2",
+      "map3",
+      "map4"
+    ]
   },
   {
-    "name": "Point_Bravo",
+    "name": "Point_B",
     "lat": 26.9134567891,
     "lon": 88.7256789012,
     "altitude": 106.3456789012,
     "height anamoly": 2.5678901234
   },
   {
-    "name": "Point_Charlie",
+    "name": "Point_C",
     "lat": 26.9145678912,
     "lon": 88.7267890123,
     "altitude": 107.4567890123,
@@ -35,14 +42,7 @@
     "height anamoly": 2.6789012345
   },
     {
-    "name": "Point_Fantastic",
-    "lat": 26.9145678912,
-    "lon": 88.7267890123,
-    "altitude": 107.4567890123,
-    "height anamoly": 2.6789012345
-  },
-    {
-    "name": "Point_Agravity",
+    "name": "Point_F",
     "lat": 26.9145678912,
     "lon": 88.7267890123,
     "altitude": 107.4567890123,
