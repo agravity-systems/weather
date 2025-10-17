@@ -239,5 +239,16 @@
     [
       "TO BE MADE"
     ]
+  },
+  {
+    "name": "OG-3B",
+    "lat": 26.74397633,
+    "lon": 88.67051466,
+    "altitude": 113.5949224,
+    "height anamoly": -48.9182128,
+    "maps":
+    [
+      "OG-3B (OG-3B.1F)"
+    ]
   }
 ]
