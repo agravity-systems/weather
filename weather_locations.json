@@ -93,5 +93,151 @@
     [
       "OG-9B (9B.3F, 9B.4F)"
     ]
+  },
+  {
+    "name": "OG-26A3",
+    "lat": 26.7474972,
+    "lon": 88.66137218,
+    "altitude": 112.9154185,
+    "height anamoly": -48.89729309,
+    "maps":
+    [
+      ""
+    ]
+  },
+  {
+    "name": "OG-26A2",
+    "lat": 26.74581878,
+    "lon": 88.66131318,
+    "altitude": 112.6287539,
+    "height anamoly": -48.9180336,
+    "maps":
+    [
+      ""
+    ]
+  },
+  {
+    "name": "OG-26A1",
+    "lat": 26.74670863,
+    "lon": 88.6613684,
+    "altitude": 112.8202748,
+    "height anamoly": -48.90685272,
+    "maps":
+    [
+      ""
+    ]
+  },
+  {
+    "name": "OG-7C2",
+    "lat": 26.75783628,
+    "lon": 88.6779107,
+    "altitude": 110.6565688,
+    "height anamoly": -48.73160934,
+    "maps":
+    [
+      "OG-7C (7C.2F, 7C.3F)",
+      "OG-7CSmall (7C.Small)",
+      "OG-7B2W (7B2W.1F, 7B2W.2F, 7B2W.3F)"
+    ]
+  },
+  {
+    "name": "OG-7A-Mid",
+    "lat": 26.75874127,
+    "lon": 88.67393144,
+    "altitude": 112.9712,
+    "height anamoly": -48.73058319,
+    "maps":
+    [
+      "OG-7A (7A.4F, 7A.5F, 7A.6F)"
+    ]
+  },
+  {
+    "name": "OG-7B-2Maps",
+    "lat": 26.76077469,
+    "lon": 88.67840219,
+    "altitude": 113.4693617,
+    "height anamoly": -48.69528961,
+    "maps":
+    [
+      "OG-7B (7B.1F, 7B.2F)"
+    ]
+  },
+  {
+    "name": "OG-7C",
+    "lat": 26.76063944,
+    "lon": 88.67932131,
+    "altitude": 112.4411419,
+    "height anamoly": -48.69454956,
+    "maps":
+    [
+      "OG-7C (7C.1F)"
+    ]
+  },
+  {
+    "name": "OG-7A3",
+    "lat": 26.76208108,
+    "lon": 88.67933641,
+    "altitude": 114.35938,
+    "height anamoly": -48.67696762,
+    "maps":
+    [
+      "OG-10A (10A.5F, 10A.6F, 10A.7F, 10A.8F)"
+    ]
+  },
+  {
+    "name": "OG-10B2",
+    "lat": 26.76500721,
+    "lon": 88.67942611,
+    "altitude": 121.5266716,
+    "height anamoly": -48.64079666,
+    "maps":
+    [
+      "OG-10B (10B.5F, 10B.6F)",
+      "OG-10C (10C.1F, 10C.2F)"
+    ]
+  },
+  {
+    "name": "OG-3A",
+    "lat": 26.74661584,
+    "lon": 88.67076476,
+    "altitude": 117.2251854,
+    "height anamoly": -48.88563156,
+    "maps":
+    [
+      "3A MAPS"
+    ]
+  },
+  {
+    "name": "OG-19A",
+    "lat": 26.75665432,
+    "lon": 88.66376432,
+    "altitude": 124.1837031,
+    "height anamoly": -48.7798996,
+    "maps":
+    [
+      "TO BE MADE"
+    ]
+  },
+  {
+    "name": "OG-19A2",
+    "lat": 26.75486409,
+    "lon": 88.66472671,
+    "altitude": 123.2375699,
+    "height anamoly": -48.800354,
+    "maps":
+    [
+      "TO BE MADE"
+    ]
+  },
+  {
+    "name": "OG-19C New",
+    "lat": 26.75527566,
+    "lon": 88.66677471,
+    "altitude": 123.3866504,
+    "height anamoly": -48.79043579,
+    "maps":
+    [
+      "TO BE MADE"
+    ]
   }
 ]
