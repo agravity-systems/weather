@@ -1,83 +1,97 @@
 [
   {
-    "name": "Point_A",
-    "lat": 26.9123456789,
-    "lon": 88.7245678910,
-    "altitude": 105.2345678901,
-    "height anamoly": 2.4567890123,
+    "name": "OG-7A",
+    "lat": 26.76106512,
+    "lon": 88.67499919,
+    "altitude": 113.00547635,
+    "height anamoly": -48.69953537,
     "maps":
     [
-      "map1",
-      "map2",
-      "map3",
-      "map4"
+      "OG-7A (7A.1F, 7A.2F, 7A.3F)",
+      "OG-10A (10A.1F, 10A.2F, 10A.3F, 10A.4F)",
+      "OG-9A (9A.1F, 9A.2F, 9A.3F)"
     ]
   },
   {
-    "name": "Point_B",
-    "lat": 26.9134567891,
-    "lon": 88.7256789012,
-    "altitude": 106.3456789012,
-    "height anamoly": 2.5678901234,
+    "name": "OG-10B",
+    "lat": 26.76386138,
+    "lon": 88.67664487,
+    "altitude": 121.1312642,
+    "height anamoly": -48.66138458,
     "maps":
     [
-      "map1",
-      "map2"
-
+      "OG-10B (10B.1F, 10B.2F, 10B.3F)",
+      "OG-9B (9B.1F, 9B.2F)",
+      "OG-9F (9F.4F)"
     ]
   },
   {
-    "name": "Point_C",
-    "lat": 26.9145678912,
-    "lon": 88.7267890123,
-    "altitude": 107.4567890123,
-    "height anamoly": 2.6789012345,
+    "name": "OG-10B3",
+    "lat": 26.76620208,
+    "lon": 88.6780099,
+    "altitude": 121.4265225,
+    "height anamoly": -48.62962341,
     "maps":
     [
-      "map1"
-
+      "OG-10B (10B.4F)",
+      "OG-9F (9F.3F, 9F.5F)"
     ]
   },
     {
-    "name": "Point_D",
-    "lat": 26.9145678912,
-    "lon": 88.7267890123,
-    "altitude": 107.4567890123,
-    "height anamoly": 2.6789012345,
+    "name": "OG-10B4,
+    "lat": 26.7640962,
+    "lon": 88.67545285,
+    "altitude": 120.9460274,
+    "height anamoly": -48.66161728,
     "maps":
     [
-      "map1",
-      "map2",
-      "map3",
-      "map4"
+      "OG-9F (9F.2F)"
     ]
   },
     {
-    "name": "Point_E",
-    "lat": 26.9145678912,
-    "lon": 88.7267890123,
-    "altitude": 107.4567890123,
-    "height anamoly": 2.6789012345,
+    "name": "OG-10B5 (same location as that of 9C),
+    "lat": 26.76383106,
+    "lon": 88.67291924,
+    "altitude": 120.0097622,
+    "height anamoly": -48.67087555,
     "maps":
     [
-      "map1",
-      "map2",
-      "map3",
-      "map4"
+      "OG-9F (9F.1F)",
     ]
   },
     {
-    "name": "Point_F",
-    "lat": 26.9145678912,
-    "lon": 88.7267890123,
-    "altitude": 107.4567890123,
-    "height anamoly": 2.6789012345,
+    "name": "OG-9C",
+    "lat": 26.76382538,
+    "lon": 88.67293383,
+    "altitude": 116.9640575,
+    "height anamoly": -48.67050171,
     "maps":
     [
-      "map1",
-      "map2",
-      "map3",
-      "map4"
+      "OG-9D (9D.1F)",
+      "OG-9E (9E.1F)",
+      "OG-9C (9C.1F)"
+    ]
+  },
+      {
+    "name": "OG-9C2",
+    "lat": 26.76253826,
+    "lon": 88.67386671,
+    "altitude": 117.58199,
+    "height anamoly": -48.68325806,
+    "maps":
+    [
+      "OG-9C (9D.2F)"
+    ]
+  },
+  {
+    "name": "OG-10B6",
+    "lat": 26.76254262,
+    "lon": 88.67385244,
+    "altitude": 120.5580992,
+    "height anamoly": -48.68372345,
+    "maps":
+    [
+      "OG-9B (9B.3F, 9B.4F)"
     ]
   }
 ]
