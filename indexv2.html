@@ -151,11 +151,11 @@
       const mapsList = buildMapIndex(sorted);
       populateMapsSelect(mapsList);
 
-      setDiag(`Loaded ${sorted.length} points from live source.`);
+      // setDiag(`Loaded ${sorted.length} points from live source.`);
     }
 
     function populateMapsSelect(mapsList){
-      mapsSelectEl.innerHTML = '<option value="">-- Select map string --</option>';
+      mapsSelectEl.innerHTML = '<option value="">-- Select map --</option>';
       if (!mapsList || mapsList.length===0){ const opt=document.createElement('option'); opt.textContent='No maps found'; mapsSelectEl.appendChild(opt); return; }
       mapsList.forEach((s,i)=>{ const opt=document.createElement('option'); opt.value=s; opt.textContent=s; mapsSelectEl.appendChild(opt); });
     }
