@@ -241,6 +241,17 @@
     ]
   },
   {
+    "name": "FootballGroundActualBase",
+    "lat": 26.7562837,
+    "lon": 88.6703028,
+    "altitude": 101.5999,
+    "height anamoly": -40.2441,
+    "maps":
+    [
+      "Football_Ground_NewMapping_Test_Map"
+    ]
+  },
+  {
     "name": "3B",
     "lat": 26.74397633,
     "lon": 88.67051466,
