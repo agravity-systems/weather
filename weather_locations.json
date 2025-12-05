@@ -8,8 +8,19 @@
     "maps":
     [
       "OG-7A (7A.1F, 7A.2F, 7A.3F)",
-      "OG-10A (10A.1F, 10A.2F, 10A.3F, 10A.4F)",
+      "OG-10A (10A.1F, 10A.2F)",
       "OG-9A (9A.1F, 9A.2F, 9A.3F)"
+    ]
+  },
+  {
+    "name": "10A (same location as 10b)",
+    "lat": 26.76385098,
+    "lon": 88.67665687,
+    "altitude": 114.3312642,
+    "height anamoly": -48.66138458,
+    "maps":
+    [
+      "OG-10A (10A.3F, 10A.4F)"
     ]
   },
   {
@@ -175,10 +186,10 @@
   },
   {
     "name": "7A3",
-    "lat": 26.76208108,
-    "lon": 88.67933641,
-    "altitude": 114.35938,
-    "height anamoly": -48.67696762,
+    "lat": 26.7621254,
+    "lon": 88.67933937,
+    "altitude": 114.3934226,
+    "height anamoly": -48.67613602,
     "maps":
     [
       "OG-10A (10A.5F, 10A.6F, 10A.7F, 10A.8F)"
